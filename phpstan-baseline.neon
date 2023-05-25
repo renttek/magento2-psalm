@@ -1,0 +1,6 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Property Renttek\\\\Magento2Psalm\\\\Mock\\\\MagentoCodeGenerationMocker\\:\\:\\$tempFiles is never read, only written\\.$#"
+			count: 1
+			path: src/Mock/MagentoCodeGenerationMocker.php
