@@ -9,6 +9,7 @@
         "ext-simplexml": "*",
         "azjezz/psl": "^2.6",
         "symfony/finder": "^5.0 || ^6.0",
+        "symfony/string": "^5.0 || ^6.0",
         "vimeo/psalm": "^5.12"
     },
     "require-dev": {

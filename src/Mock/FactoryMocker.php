@@ -6,6 +6,8 @@ namespace Renttek\Magento2Psalm\Mock;
 
 use function Psl\Str\before_last;
 use function Psl\Str\Byte\after_last;
+use Stringable;
+use function Symfony\Component\String\s;
 
 class FactoryMocker extends MagentoCodeGenerationMocker
 {
@@ -32,18 +34,20 @@ class FactoryMocker extends MagentoCodeGenerationMocker
             && !str_ends_with($className, '\Factory');
     }
 
-    protected function getBaseClassName(string $className): string
+    protected function getBaseClassName(string $className): string|Stringable
     {
-        return substr($className, 0, strlen($className) - 7);
+        return s($className)->trimSuffix('Factory');
     }
 
-    protected function generateClass(string $baseClassName): string
+    protected function generateClass(string $baseClassName): string|Stringable
     {
+        $className = after_last($baseClassName, '\\') ?? '';
+
         return strtr(
             self::TEMPLATE,
             [
                 "{{namespace}}" => before_last($baseClassName, '\\') ?? $baseClassName,
-                "{{class_name}}" => (after_last($baseClassName, '\\') ?? '') . 'Factory',
+                "{{class_name}}" => s($className)->ensureEnd('Factory'),
                 "{{return_class}}" => '\\' . $baseClassName,
             ]
         );

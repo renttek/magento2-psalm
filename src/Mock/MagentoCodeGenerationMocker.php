@@ -7,7 +7,9 @@ namespace Renttek\Magento2Psalm\Mock;
 use Magento\Framework\Component\ComponentRegistrar;
 use Renttek\Magento2Psalm\Exception\CouldNotCreateTemporaryFile;
 use RuntimeException;
+use Stringable;
 
+use function Psl\Dict\map_keys;
 use function Psl\Iter\any;
 use function Psl\Str\before_last;
 use function Psl\Vec\keys;
@@ -26,13 +28,18 @@ abstract class MagentoCodeGenerationMocker
     private ?array $moduleNamespaces = null;
 
     /**
+     * @var array<string, string>|null
+     */
+    private ?array $modules = null;
+
+    /**
      * @param class-string $className
      */
     abstract protected function canGenerateClass(string $className): bool;
 
-    abstract protected function getBaseClassName(string $className): string;
+    abstract protected function getBaseClassName(string $className): string|Stringable;
 
-    abstract protected function generateClass(string $baseClassName): string;
+    abstract protected function generateClass(string $baseClassName): string|Stringable;
 
     public function registerAutoloader(): void
     {
@@ -42,19 +49,19 @@ abstract class MagentoCodeGenerationMocker
                 return;
             }
 
-            $this->moduleNamespaces ??= $this->getModuleNamespaces();
+            $this->moduleNamespaces ??= keys($this->getModules());
             if (!$this->isInMagentoModuleNamespaces($this->moduleNamespaces, $className)) {
                 return;
             }
 
-            $baseClassName = $this->getBaseClassName($className);
-
+            $baseClassName = (string)$this->getBaseClassName($className);
             if (!class_exists($baseClassName) && !interface_exists($baseClassName)) {
                 return;
             }
 
-            $content = $this->generateClass($baseClassName);
-            $this->addStubFile($content);
+            $this->addStubFile(
+                (string)$this->generateClass($baseClassName)
+            );
         });
     }
 
@@ -71,16 +78,14 @@ abstract class MagentoCodeGenerationMocker
     }
 
     /**
-     * @return list<string>
+     * @return array<string, string>
      */
-    private function getModuleNamespaces(): array
+    protected function getModules(): array
     {
-        $registrar   = (new ComponentRegistrar());
-        $modulePaths = $registrar->getPaths(ComponentRegistrar::MODULE);
-        $moduleNames = keys($modulePaths);
-
-        /** @psalm-suppress MixedArgumentTypeCoercion */
-        return map($moduleNames, fn (string $name) => str_replace('_', '\\', $name));
+        return $this->modules ??= map_keys(
+            (new ComponentRegistrar())->getPaths(ComponentRegistrar::MODULE),
+            fn (string $name) => str_replace('_', '\\', $name)
+        );
     }
 
     /**

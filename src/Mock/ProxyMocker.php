@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Renttek\Magento2Psalm\Mock;
 
+use Stringable;
+
 use function Psl\Str\before_last;
 
 class ProxyMocker extends MagentoCodeGenerationMocker
@@ -23,12 +25,12 @@ class ProxyMocker extends MagentoCodeGenerationMocker
         return str_ends_with($className, '\Proxy');
     }
 
-    protected function getBaseClassName(string $className): string
+    protected function getBaseClassName(string $className): string|Stringable
     {
         return before_last($className, '\\') ?? $className;
     }
 
-    protected function generateClass(string $baseClassName): string
+    protected function generateClass(string $baseClassName): string|Stringable
     {
         return strtr(
             self::TEMPLATE,
