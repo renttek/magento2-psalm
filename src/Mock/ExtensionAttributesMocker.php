@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Renttek\Magento2Psalm\Mock;
 
-use DOMDocument;
-use DOMElement;
 use Renttek\Magento2Psalm\FileReader\ExtensionAttributesReader;
 use Stringable;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 use function ksort;
-use function Psl\Dict\flatten;
 use function Psl\Iter\reduce;
 use function Psl\Str\before_last;
 use function Psl\Str\Byte\after_last;
@@ -76,6 +73,7 @@ class ExtensionAttributesMocker extends MagentoCodeGenerationMocker
 
     protected function generateClass(string $baseClassName): string|Stringable
     {
+        /** @psalm-suppress PossiblyInvalidArrayOffset */
         $definition = $this->getExtensionAttributes()[$baseClassName];
 
         $methods = [];
@@ -95,9 +93,9 @@ class ExtensionAttributesMocker extends MagentoCodeGenerationMocker
         return strtr(
             self::TEMPLATE,
             [
-                "{{namespace}}" => before_last($baseClassName, '\\') ?? $baseClassName,
-                "{{class_name}}" => s($className)->trimSuffix('Interface')->ensureEnd('ExtensionInterface'),
-                "{{methods}}" => implode("\n", values($methods)),
+                '{{namespace}}' => before_last($baseClassName, '\\') ?? $baseClassName,
+                '{{class_name}}' => s($className)->trimSuffix('Interface')->ensureEnd('ExtensionInterface'),
+                '{{methods}}' => implode("\n", values($methods)),
             ]
         );
     }
@@ -137,7 +135,11 @@ class ExtensionAttributesMocker extends MagentoCodeGenerationMocker
     {
         return reduce(
             $definitions,
-            static function ($acc, $val) {
+            /**
+             * @param array<class-string, list<array{type: string, code: string}>> $acc
+             * @param array{class: class-string, type: string, code: string} $val
+             */
+            static function (array $acc, array $val) {
                 $acc[$val['class']] ??= [];
                 $acc[$val['class']][] = [
                     'code' => $val['code'],
