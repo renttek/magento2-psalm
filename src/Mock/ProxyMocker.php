@@ -35,9 +35,9 @@ class ProxyMocker extends MagentoCodeGenerationMocker
         return strtr(
             self::TEMPLATE,
             [
-                "{{namespace}}" => $baseClassName,
-                "{{class_name}}" => "Proxy",
-                "{{base_class}}" => '\\' . $baseClassName,
+                '{{namespace}}' => $baseClassName,
+                '{{class_name}}' => 'Proxy',
+                '{{base_class}}' => '\\' . $baseClassName,
             ]
         );
     }

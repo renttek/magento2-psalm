@@ -11,9 +11,7 @@ use Stringable;
 
 use function Psl\Dict\map_keys;
 use function Psl\Iter\any;
-use function Psl\Str\before_last;
 use function Psl\Vec\keys;
-use function Psl\Vec\map;
 
 abstract class MagentoCodeGenerationMocker
 {
@@ -31,15 +29,6 @@ abstract class MagentoCodeGenerationMocker
      * @var array<string, string>|null
      */
     private ?array $modules = null;
-
-    /**
-     * @param class-string $className
-     */
-    abstract protected function canGenerateClass(string $className): bool;
-
-    abstract protected function getBaseClassName(string $className): string|Stringable;
-
-    abstract protected function generateClass(string $baseClassName): string|Stringable;
 
     public function registerAutoloader(): void
     {
@@ -65,17 +54,14 @@ abstract class MagentoCodeGenerationMocker
         });
     }
 
-    private function addStubFile(string $content): void
-    {
-        [
-            'path' => $filePath,
-            'file' => $fileHandle,
-        ] = $this->createTempFile();
+    /**
+     * @param class-string $className
+     */
+    abstract protected function canGenerateClass(string $className): bool;
 
-        fwrite($fileHandle, $content);
+    abstract protected function getBaseClassName(string $className): string|Stringable;
 
-        require_once $filePath;
-    }
+    abstract protected function generateClass(string $baseClassName): string|Stringable;
 
     /**
      * @return array<string, string>
@@ -86,6 +72,18 @@ abstract class MagentoCodeGenerationMocker
             (new ComponentRegistrar())->getPaths(ComponentRegistrar::MODULE),
             fn (string $name) => str_replace('_', '\\', $name)
         );
+    }
+
+    private function addStubFile(string $content): void
+    {
+        [
+            'path' => $filePath,
+            'file' => $fileHandle,
+        ] = $this->createTempFile();
+
+        fwrite($fileHandle, $content);
+
+        require_once $filePath;
     }
 
     /**

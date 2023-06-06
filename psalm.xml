@@ -14,6 +14,10 @@
         </ignoreFiles>
     </projectFiles>
 
+    <stubs>
+        <file name="stubs/Magento/Framework/Component/ComponentRegistrarInterface.phpstub"/>
+    </stubs>
+
     <issueHandlers>
         <UnresolvableInclude errorLevel="suppress"/>
 

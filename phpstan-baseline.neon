@@ -4,3 +4,8 @@ parameters:
 			message: "#^Property Renttek\\\\Magento2Psalm\\\\Mock\\\\MagentoCodeGenerationMocker\\:\\:\\$tempFiles is never read, only written\\.$#"
 			count: 1
 			path: src/Mock/MagentoCodeGenerationMocker.php
+
+		-
+			message: "#^Variable property access on SimpleXMLElement\\.$#"
+			count: 1
+			path: src/Plugin.php

@@ -7,6 +7,7 @@ namespace Renttek\Magento2Psalm\FileReader;
 use DOMDocument;
 use DOMElement;
 use DOMNode;
+use Exception;
 use Symfony\Component\Finder\SplFileInfo;
 
 class ExtensionAttributesReader
@@ -21,17 +22,17 @@ class ExtensionAttributesReader
         try {
             $extensionAttributes = $this->readExtensionAttributeNodesFromFile($file);
 
-            foreach ($extensionAttributes as $extensionAttribute) {
+            foreach ($extensionAttributes ?? [] as $extensionAttribute) {
                 if (!$extensionAttribute instanceof DOMElement) {
                     continue;
                 }
 
-                /** @var DOMElement $extensionAttribute */
+                /** @var class-string $targetClass */
                 $targetClass = $extensionAttribute->getAttribute('for');
 
                 $attributesNodes = $extensionAttribute->getElementsByTagName('attribute');
                 foreach ($attributesNodes as $attribute) {
-
+                    /** @var DOMElement $attribute */
                     $definitions[] = [
                         'class' => $targetClass,
                         'code' => $attribute->getAttribute('code'),
@@ -39,7 +40,7 @@ class ExtensionAttributesReader
                     ];
                 }
             }
-        } catch (Throwable) {
+        } catch (Exception) {
             return [];
         }
 
@@ -47,8 +48,6 @@ class ExtensionAttributesReader
     }
 
     /**
-     * @param SplFileInfo $file
-     *
      * @return iterable<DOMNode>
      */
     private function readExtensionAttributeNodesFromFile(SplFileInfo $file): ?iterable

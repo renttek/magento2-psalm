@@ -19,7 +19,10 @@
         "php-parallel-lint/php-parallel-lint": "^1.3",
         "phpstan/extension-installer": "^1.3",
         "phpstan/phpstan": "^1.10",
-        "squizlabs/php_codesniffer": "^3.7"
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-strict-rules": "^1.5",
+        "roave/security-advisories": "dev-latest",
+        "symplify/easy-coding-standard": "^11.3"
     },
     "repositories": [
         {
@@ -27,7 +30,8 @@
             "url": "https://mirror.mage-os.org/"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-4": {
             "Renttek\\Magento2Psalm\\": [
@@ -57,17 +61,17 @@
     "scripts": {
         "check": [
             "@check-lint",
-            "@check-phpcs",
+            "@check-ecs check",
             "@check-phpstan",
             "@check-psalm"
         ],
+        "check-ecs": "ecs",
         "check-lint": "parallel-lint src stubs",
-        "check-phpcs": "phpcs",
         "check-phpstan": "phpstan",
         "check-psalm": "psalm --show-info",
         "fix": [
-            "@fix-phpcbf"
+            "@fix-ecs"
         ],
-        "fix-phpcbf": "phpcbf"
+        "fix-ecs": "ecs check --fix"
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Renttek\Magento2Psalm\Mock;
 
+use Stringable;
 use function Psl\Str\before_last;
 use function Psl\Str\Byte\after_last;
-use Stringable;
 use function Symfony\Component\String\s;
 
 class FactoryMocker extends MagentoCodeGenerationMocker
@@ -46,9 +46,9 @@ class FactoryMocker extends MagentoCodeGenerationMocker
         return strtr(
             self::TEMPLATE,
             [
-                "{{namespace}}" => before_last($baseClassName, '\\') ?? $baseClassName,
-                "{{class_name}}" => s($className)->ensureEnd('Factory'),
-                "{{return_class}}" => '\\' . $baseClassName,
+                '{{namespace}}' => before_last($baseClassName, '\\') ?? $baseClassName,
+                '{{class_name}}' => s($className)->ensureEnd('Factory'),
+                '{{return_class}}' => '\\' . $baseClassName,
             ]
         );
     }

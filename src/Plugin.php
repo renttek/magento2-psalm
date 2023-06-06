@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Renttek\Magento2Psalm;
 
+use Psalm\Plugin\PluginEntryPointInterface;
+use Psalm\Plugin\RegistrationInterface;
 use Renttek\Magento2Psalm\Mock\ExtensionAttributesMocker;
 use Renttek\Magento2Psalm\Mock\FactoryMocker;
 use Renttek\Magento2Psalm\Mock\ProxyMocker;
 use SimpleXMLElement;
-use Psalm\Plugin\PluginEntryPointInterface;
-use Psalm\Plugin\RegistrationInterface;
 use Symfony\Component\Finder\Finder;
 
 class Plugin implements PluginEntryPointInterface
@@ -55,6 +55,6 @@ class Plugin implements PluginEntryPointInterface
 
     private function getConfigFlag(?SimpleXMLElement $config, string $flag, bool $default): bool
     {
-        return filter_var($config?->$flag ?? $default, FILTER_VALIDATE_BOOLEAN);
+        return filter_var($config?->{$flag} ?? $default, FILTER_VALIDATE_BOOLEAN);
     }
 }
