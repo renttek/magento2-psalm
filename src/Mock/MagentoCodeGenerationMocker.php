@@ -49,7 +49,7 @@ abstract class MagentoCodeGenerationMocker
 
             $baseClassName = $this->getBaseClassName($className);
 
-            if (!class_exists($baseClassName)) {
+            if (!class_exists($baseClassName) && !interface_exists($baseClassName)) {
                 return;
             }
 
@@ -89,7 +89,8 @@ abstract class MagentoCodeGenerationMocker
      */
     private function isInMagentoModuleNamespaces(array $namespaces, string $className): bool
     {
-        return any($namespaces, fn (string $namespace) => str_starts_with($className, $namespace));
+        return any($namespaces, fn (string $namespace) => str_starts_with($className, $namespace))
+            || str_starts_with($className, 'Magento\\Framework\\');
     }
 
     /**
