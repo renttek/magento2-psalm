@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Renttek\Magento2Psalm;
 
 use Renttek\Magento2Psalm\Mock\FactoryMocker;
+use Renttek\Magento2Psalm\Mock\ProxyMocker;
 use SimpleXMLElement;
 use Psalm\Plugin\PluginEntryPointInterface;
 use Psalm\Plugin\RegistrationInterface;
@@ -21,6 +22,7 @@ class Plugin implements PluginEntryPointInterface
     public function __invoke(RegistrationInterface $registration, ?SimpleXMLElement $config = null): void
     {
         (new FactoryMocker())->registerAutoloader();
+        (new ProxyMocker())->registerAutoloader();
 
         $this->loadStubs($registration);
     }

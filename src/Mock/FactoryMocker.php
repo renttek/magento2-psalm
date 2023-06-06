@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Renttek\Magento2Psalm\Mock;
 
 use function Psl\Str\before_last;
+use function Psl\Str\Byte\after_last;
 
 class FactoryMocker extends MagentoCodeGenerationMocker
 {
@@ -33,7 +34,7 @@ class FactoryMocker extends MagentoCodeGenerationMocker
 
     protected function getBaseClassName(string $className): string
     {
-        return substr($className, strlen($className) - 7);
+        return substr($className, 0, strlen($className) - 7);
     }
 
     protected function generateClass(string $baseClassName): string
@@ -42,7 +43,7 @@ class FactoryMocker extends MagentoCodeGenerationMocker
             self::TEMPLATE,
             [
                 "{{namespace}}" => before_last($baseClassName, '\\') ?? $baseClassName,
-                "{{class_name}}" => "{$baseClassName}Factory",
+                "{{class_name}}" => (after_last($baseClassName, '\\') ?? '') . 'Factory',
                 "{{return_class}}" => '\\' . $baseClassName,
             ]
         );
