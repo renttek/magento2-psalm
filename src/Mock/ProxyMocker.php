@@ -15,7 +15,7 @@ class ProxyMocker extends MagentoCodeGenerationMocker
     
     namespace {{namespace}};
     
-    class {{class_name}} extends {{base_class}}
+    {{type}} {{class_name}} extends {{base_class}}
     {
     }
     TEMPLATE;
@@ -32,10 +32,15 @@ class ProxyMocker extends MagentoCodeGenerationMocker
 
     protected function generateClass(string $baseClassName): string|Stringable
     {
+        $type = interface_exists($baseClassName)
+            ? 'interface'
+            : 'class';
+
         return strtr(
             self::TEMPLATE,
             [
                 '{{namespace}}' => $baseClassName,
+                '{{type}}' => $type,
                 '{{class_name}}' => 'Proxy',
                 '{{base_class}}' => '\\' . $baseClassName,
             ]
