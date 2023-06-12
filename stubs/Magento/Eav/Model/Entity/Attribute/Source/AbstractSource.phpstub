@@ -1,0 +1,100 @@
+<?php
+
+namespace Magento\Eav\Model\Entity\Attribute\Source;
+
+use Magento\Eav\Model\Entity\Attribute\AbstractAttribute;
+use Magento\Eav\Model\Entity\Collection\AbstractCollection;
+use Magento\Framework\Data\Collection;
+use Magento\Framework\DB\Select;
+use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Phrase;
+use Stringable;
+
+abstract class AbstractSource implements SourceInterface, ArrayInterface
+{
+    /**
+     * @param AbstractAttribute $attribute
+     * @return self
+     */
+    public function setAttribute(AbstractAttribute $attribute)
+    {
+    }
+
+    /**
+     * @return AbstractAttribute
+     */
+    public function getAttribute()
+    {
+    }
+
+    /**
+     * @param  string|int $value
+     * @return string|Phrase|Stringable|false
+     */
+    public function getOptionText($value)
+    {
+    }
+
+    /**
+     * @param string|Phrase|Stringable $value
+     * @return string|Phrase|Stringable|null
+     */
+    public function getOptionId($value)
+    {
+    }
+
+    /**
+     * @param AbstractCollection $collection
+     * @param string             $dir
+     *
+     * @return self
+     */
+    public function addValueSortToCollection($collection, $dir = Collection::SORT_ORDER_DESC ): self {
+    }
+
+    /**
+     * @return array<string, array{
+     *     type: string,
+     *     length: string|int|null,
+     *     unsigned: bool,
+     *     nullable: bool,
+     *     default: string|null,
+     *     extra: string|null,
+     *     comment: string,
+     * }>
+     */
+    public function getFlatColumns()
+    {
+    }
+
+    /**
+     * @return array<string, array{type: 'index', fields: list<string>}>
+     */
+    public function getFlatIndexes()
+    {
+    }
+
+    /**
+     * @param int $store
+     * @return Select|null
+     */
+    public function getFlatUpdateSelect($store)
+    {
+    }
+
+    /**
+     * @param string|int $value
+     */
+    public function getIndexOptionText($value): string|Phrase|Stringable|false
+    {
+        return $this->getOptionText($value);
+    }
+
+    /**
+     * @return list<array{value: int|float|string|Stringable, label: string|Phrase|Stringable}>
+     */
+    public function toOptionArray()
+    {
+        return $this->getAllOptions();
+    }
+}
