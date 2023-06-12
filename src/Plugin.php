@@ -41,10 +41,10 @@ class Plugin implements PluginEntryPointInterface
         $stubFiles = $this->finder
             ->files()
             ->in($this->getStubDirectory())
-            ->name('*.php');
+            ->name('*.phpstub');
 
         foreach ($stubFiles as $stubFile) {
-            $psalm->addStubFile($stubFile->getPath());
+            $psalm->addStubFile($stubFile->getRealPath());
         }
     }
 
